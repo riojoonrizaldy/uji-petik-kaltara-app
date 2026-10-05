@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "nomor_wo": "WO-100201",
+    "pekerjaan": "PSB",
+    "nama_pelanggan": "Pak Hendra Wijaya",
+    "nomor_telepon": "081255443322",
+    "nama_teknisi": "Dedi & Tim Bravo",
+    "panjang_kabel": "110",
+    "alamat": "Jl. Mulawarman No. 45, Tarakan Barat",
+    "created_at": "2026-10-02T01:00:00.000Z"
+  },
+  {
+    "id": 2,
+    "nomor_wo": "WO-100202",
+    "pekerjaan": "PSB",
+    "nama_pelanggan": "IYAY",
+    "nomor_telepon": "081361271787",
+    "nama_teknisi": "Ahmad & Tim Borneo",
+    "panjang_kabel": "125",
+    "alamat": "Jl. Kusuma Bangsa RT 12, Tarakan Timur",
+    "created_at": "2026-10-02T01:10:00.000Z"
+  },
+  {
+    "id": 3,
+    "nomor_wo": "WO-200301",
+    "pekerjaan": "GANGGUAN",
+    "nama_pelanggan": "Ibu Kartika",
+    "nomor_telepon": "082199887766",
+    "nama_teknisi": "Agus Saputra",
+    "panjang_kabel": "90",
+    "alamat": "Jl. Yos Sudarso Komp. Pelabuhan, Tarakan",
+    "created_at": "2026-10-02T02:00:00.000Z"
+  },
+  {
+    "id": 4,
+    "nomor_wo": "WO-200302",
+    "pekerjaan": "GANGGUAN",
+    "nama_pelanggan": "Toko Sinar Jaya",
+    "nomor_telepon": "085233114455",
+    "nama_teknisi": "Bambang & Riko",
+    "panjang_kabel": "75",
+    "alamat": "Pasar Lingkas, Tarakan Tengah",
+    "created_at": "2026-10-02T02:30:00.000Z"
+  }
+]
