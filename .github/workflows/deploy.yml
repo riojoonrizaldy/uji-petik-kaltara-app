@@ -1,0 +1,86 @@
+name: Deploy production
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.repository == 'riojoonrizaldy/uji-petik-kaltara-app' && github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, windows, x64]
+    timeout-minutes: 30
+
+    steps:
+      - name: Pull, build, and restart the production app
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $repo = 'C:\Users\admin\uji-petik-kaltara-app'
+          $npm = 'C:\Program Files\nodejs\npm.cmd'
+
+          $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+          $principal = [Security.Principal.WindowsPrincipal]::new($identity)
+          if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+            throw 'The runner service must run as a trusted Windows administrator to deploy.'
+          }
+
+          if (-not (Test-Path (Join-Path $repo '.git'))) {
+            throw "Production repository not found: $repo"
+          }
+          if (-not (Test-Path $npm)) {
+            throw "npm not found: $npm"
+          }
+
+          $dirty = git -C $repo status --porcelain
+          if ($LASTEXITCODE -ne 0) {
+            throw 'Could not inspect the production worktree.'
+          }
+          if ($dirty) {
+            throw 'Production worktree has local changes. Refusing to deploy over them.'
+          }
+
+          git -C $repo pull --ff-only origin main
+          if ($LASTEXITCODE -ne 0) {
+            throw 'git pull failed.'
+          }
+
+          Push-Location $repo
+          try {
+            & $npm ci
+            if ($LASTEXITCODE -ne 0) {
+              throw 'npm ci failed.'
+            }
+
+            & $npm run build
+            if ($LASTEXITCODE -ne 0) {
+              throw 'npm run build failed.'
+            }
+          }
+          finally {
+            Pop-Location
+          }
+
+          Restart-Service -Name UjiPetikNext -ErrorAction Stop
+          $deadline = (Get-Date).AddSeconds(60)
+          do {
+            try {
+              $response = Invoke-WebRequest -Uri 'http://127.0.0.1:3000' -UseBasicParsing -TimeoutSec 5
+              if ($response.StatusCode -eq 200) {
+                Write-Output 'Production app is responding with HTTP 200.'
+                exit 0
+              }
+            }
+            catch {
+              Start-Sleep -Seconds 2
+            }
+          } while ((Get-Date) -lt $deadline)
+
+          throw 'Production app did not return HTTP 200 within 60 seconds.'
