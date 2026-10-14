@@ -355,7 +355,7 @@ export default function InputForm({
             <Sparkles className="w-3.5 h-3.5" /> Formulir Quality Control Lapangan
           </div>
           <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-            Input Uji Petik Fiber Optiks
+            Input Uji Petik Fiber Optikssss
           </h2>
           <p className="text-red-100 text-sm mt-1 max-w-xl">
             Masukkan Nomor WO untuk <strong>mengisi otomatis</strong> nama pelanggan, no telepon, teknisi, dan panjang tarikan dari Master Data PSB/Gangguan.
