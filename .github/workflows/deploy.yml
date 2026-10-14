@@ -28,9 +28,11 @@ jobs:
 
           $identity = [Security.Principal.WindowsIdentity]::GetCurrent()
           $principal = [Security.Principal.WindowsPrincipal]::new($identity)
-          if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+          $isLocalSystem = $identity.User.Value -eq 'S-1-5-18'
+          if (-not $isLocalSystem -and -not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
             throw 'The runner service must run as a trusted Windows administrator to deploy.'
           }
+          Write-Output "Deploying as $($identity.Name)."
 
           if (-not (Test-Path (Join-Path $repo '.git'))) {
             throw "Production repository not found: $repo"
@@ -39,7 +41,8 @@ jobs:
             throw "npm not found: $npm"
           }
 
-          $dirty = git -C $repo status --porcelain
+          $git = (Get-Command git.exe -ErrorAction Stop).Source
+          $dirty = & $git -c "safe.directory=$repo" -C $repo status --porcelain
           if ($LASTEXITCODE -ne 0) {
             throw 'Could not inspect the production worktree.'
           }
@@ -47,7 +50,7 @@ jobs:
             throw 'Production worktree has local changes. Refusing to deploy over them.'
           }
 
-          git -C $repo pull --ff-only origin main
+          & $git -c "safe.directory=$repo" -C $repo pull --ff-only origin main
           if ($LASTEXITCODE -ne 0) {
             throw 'git pull failed.'
           }
