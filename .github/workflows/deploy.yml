@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Pull, build, and restart the production app
-        shell: powershell
+        shell: powershell -ExecutionPolicy Bypass -File {0}
         run: |
           $ErrorActionPreference = 'Stop'
           $repo = 'C:\Users\admin\uji-petik-kaltara-app'
