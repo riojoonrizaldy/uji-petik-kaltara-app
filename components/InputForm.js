@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Camera, 
   Upload, 
   Trash2, 
   CheckCircle2, 
@@ -873,13 +872,12 @@ export default function InputForm({
                             {isUploading ? (
                               <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
                             ) : (
-                              <Camera className="w-4 h-4" />
+                              <Upload className="w-4 h-4" />
                             )}
-                            <span>{isUploading ? 'Mengunggah...' : 'Ambil Foto'}</span>
+                            <span>{isUploading ? 'Mengunggah...' : 'Upload Foto'}</span>
                             <input
                               type="file"
                               accept="image/*"
-                              capture="environment"
                               disabled={isUploading}
                               className="hidden"
                               onChange={(e) => {
