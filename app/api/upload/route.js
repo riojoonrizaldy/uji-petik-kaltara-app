@@ -26,7 +26,7 @@ export async function POST(request) {
 
     fs.writeFileSync(filePath, buffer);
 
-    const publicUrl = `/uploads/${filename}`;
+    const publicUrl = `/api/uploads/${filename}`;
     return NextResponse.json({ success: true, url: publicUrl, filename });
   } catch (err) {
     console.error('Upload error:', err);

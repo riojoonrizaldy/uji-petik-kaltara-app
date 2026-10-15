@@ -96,3 +96,17 @@ Perintah ini akan membuat database `uji_petik_db` beserta tabel `uji_petik` dan 
    ```
 
 Aplikasi aktif dan dapat diakses di: **[http://localhost:3000](http://localhost:3000)**
+
+### Penyajian foto di server production
+
+Foto disimpan di `public/uploads` dan dibaca saat diminta melalui
+`/api/uploads/[filename]`, dengan `Cache-Control: no-store`. URL lama
+`/uploads/[filename]` diarahkan ke endpoint yang sama melalui rewrite Next.js.
+Ini memungkinkan foto yang diunggah setelah build/server berjalan langsung dibaca.
+
+Setelah memperbarui kode, jalankan build dan restart proses aplikasi. Jika memakai
+Nginx/CDN, pastikan `/api/uploads/*` diteruskan ke Next.js tanpa cache. Agar URL lama
+ikut memakai perbaikan ini, `/uploads/*` juga harus diteruskan ke Next.js, bukan
+dilayani oleh aturan static-file terpisah; bersihkan cache 404 lama jika ada.
+Folder `public/uploads` harus tetap tersimpan saat deploy dan digunakan bersama
+oleh semua instance aplikasi jika server menjalankan lebih dari satu instance.
